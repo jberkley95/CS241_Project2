@@ -26,7 +26,7 @@ public class MaxHeap {
     private int numberOfSwaps;
 
     /**
-     * Default Constructor. Assigns maxSize to 100, current siz, and number of swaps to 0, and initializes heapArray.
+     * Default Constructor. Assigns maxSize to 100, current siz, and number of swaps to 0, and initializes heapArray
      */
     public MaxHeap() {
         maxSize = 100;
@@ -35,6 +35,12 @@ public class MaxHeap {
         heapArray = new int[maxSize];
     }
 
+    /**
+     * Inserts a value into the max heap
+     *
+     * @param value to be inserted
+     * @return true if inserted properly, false if insert failed
+     */
     public boolean insert(int value) {
         if (currentSize == maxSize) {
             return false;
@@ -44,6 +50,11 @@ public class MaxHeap {
         return true;
     }
 
+    /**
+     * Trickles up value at given index
+     *
+     * @param index to be trickled up
+     */
     private void trickleUp(int index) {
         int parent = (index - 1) / 2;
         int bottom = heapArray[index];
@@ -57,6 +68,11 @@ public class MaxHeap {
         heapArray[index] = bottom;
     }
 
+    /**
+     * Removes a value from the top of the heap
+     *
+     * @return value that was removed from heap
+     */
     public int remove() {
         int root = heapArray[0];
         heapArray[0] = heapArray[--currentSize];
@@ -64,6 +80,13 @@ public class MaxHeap {
         return root;
     }
 
+    /**
+     * Inserts a value into the heap, if the max heap is filled, it will sort values optimally
+     *
+     * @param value to be inserted
+     * @param filledSize max size before sorting
+     * @return true if value is inserted properly, false if insert failed
+     */
     public boolean insertOptimal(int value, int filledSize) {
         if (currentSize == maxSize) {
             return false;
@@ -71,42 +94,23 @@ public class MaxHeap {
 
         heapArray[currentSize++] = value;
         if (currentSize == filledSize) {
-            optimalReheapify();
+            int parent = (currentSize / 2) - 1;
+
+            while (parent > 0) {
+                trickleDown(parent);
+                parent--;
+            }
+            trickleDown(0);
         }
+
         return true;
     }
 
-    private void optimalReheapify() {
-        int largerChild;
-        int parent = (currentSize / 2) - 1;
-
-        while (parent > 0) {
-            int leftChild = 2 * parent + 1;
-            int rightChild = leftChild + 1;
-
-            if (rightChild < currentSize && heapArray[leftChild] < heapArray[rightChild]) {
-                largerChild = rightChild;
-            } else {
-                largerChild = leftChild;
-            }
-
-            if (heapArray[parent] < heapArray[largerChild]) {
-                swap(parent, largerChild);
-            }
-
-            parent--;
-        }
-
-        trickleDown(0);
-    }
-
-    private void swap(int parent, int child) {
-        int temp = heapArray[parent];
-        heapArray[parent] = heapArray[child];
-        heapArray[child] = temp;
-        numberOfSwaps++;
-    }
-
+    /**
+     * Trickles down value at given idex
+     *
+     * @param index to be trickled down
+     */
     private void trickleDown(int index) {
         int largerChild;
         int top = heapArray[index];
@@ -133,16 +137,22 @@ public class MaxHeap {
         heapArray[index] = top;
     }
 
+    /**
+     * Displays first 10 values in the heap
+     */
     public void displayHeap() {
-        for (int i = 0; i < currentSize - 1; i++) {
+        for (int i = 0; i < 10; i++) {
             System.out.print(heapArray[i] + ", ");
         }
-        System.out.print(heapArray[currentSize - 1]);
+        System.out.println("...");
     }
 
+    /**
+     * Gets the total number of swaps that have occurred over all swaps during the lifetime of the heap
+     *
+     * @return the total number of swaps
+     */
     public int getNumberOfSwaps() {
         return numberOfSwaps;
     }
-
-    //TODO: Add Javadoc comments
 }
